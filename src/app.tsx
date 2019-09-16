@@ -1,26 +1,32 @@
 import React, { useState } from 'react';
 
-import IPhrase from './interfaces/phrase';
 import PhraseTest from './components/phrase-test';
+import phrases from './phrases';
 import styled from 'styled-components';
 
 const AppContainer = styled.div`
   align-items: center;
   display: flex;
   flex-direction: column;
-  justify-content: center; 
+  justify-content: center;
   min-height: 100vh;
 `;
 
 export default function App() {
-  const [phrase, setPhrase] = useState<IPhrase>({
-    english: 'What music do you like?',
-    spanish: 'Que música te gusta'
-  });
+  const [phraseIndex, setPhraseIndex] = useState(0);
+
+  const onCorrectPhrase = () => {
+    setPhraseIndex(phraseIndex + 1);
+  }
+
+  const index = phraseIndex % phrases.length;
 
   return (
     <AppContainer>
-      <PhraseTest phrase={phrase} />
+      <PhraseTest
+        phrase={ phrases[index] }
+        onCorrectPhrase={ onCorrectPhrase }
+        />
     </AppContainer>
   );
 }

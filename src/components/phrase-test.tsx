@@ -9,6 +9,7 @@ import styled from 'styled-components';
 
 interface IPhraseTestProps {
   phrase: IPhrase;
+  onCorrectPhrase: Function;
 }
 
 const Form = styled.form`
@@ -27,7 +28,7 @@ const EnglishText = styled.p`
   margin: 0;
 `;
 
-export default function PhraseTest({ phrase }: IPhraseTestProps) {
+export default function PhraseTest({ phrase, onCorrectPhrase }: IPhraseTestProps) {
   const [words, setWords] = useState<IWord[]>([]);
 
   useEffect(() => {
@@ -37,7 +38,7 @@ export default function PhraseTest({ phrase }: IPhraseTestProps) {
       input: '',
       text: part
     }) as IWord));
-  }, [phrase]);
+  }, [ phrase ]);
 
   const correctInput = (event: FormEvent) => {
     event.preventDefault();
@@ -46,6 +47,10 @@ export default function PhraseTest({ phrase }: IPhraseTestProps) {
       ...word,
       isCorrect: compare(word.text.toLocaleLowerCase(), word.input.toLocaleLowerCase())
     }));
+
+    if (correctedWords.every(({ isCorrect }) => isCorrect)) {
+      onCorrectPhrase();
+    }
 
     setWords(correctedWords);
   };
@@ -72,7 +77,7 @@ export default function PhraseTest({ phrase }: IPhraseTestProps) {
         isCorrect={ word.isCorrect }
         onChange={(text: string) => { updateWord(index, text); }}
         word={ word.input }
-        key={ index }
+        key={ word.text }
         />
     );
   };
